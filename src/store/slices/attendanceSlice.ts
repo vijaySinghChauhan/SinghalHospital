@@ -22,7 +22,10 @@ const initialState: AttendanceState = {
 export const markAttendance = createAsyncThunk(
   'attendance/mark',
   async (payload: AttendanceRecord) => {
-    const res = await api.post('/api/attendance/mark', payload);
+    const res = await api.post('/api/attendance/mark', {
+      employeeId: payload.employeeId,
+      timestamp: payload.timestamp,
+    });
     return res.data;
   },
 );
