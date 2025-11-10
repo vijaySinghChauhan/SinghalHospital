@@ -52,13 +52,62 @@ SinghalHospital/
 4. Run the app on Windows:
    - `npx react-native run-windows`
 
-> Mock mode is enabled by default (`src/config.ts`). Set `useMockApi` to `false` and update `baseURL` to connect to your backend.
+> Mock mode is disabled (`src/config.ts`). The app uses the backend API by default. Ensure `baseURL` points to your server.
 
 ## APIs
 - `POST /api/auth/register`
 - `POST /api/auth/login`
 - `POST /api/attendance/mark`
 - `GET /api/salary/calculate/:employeeId`
+
+## Backend (Node.js)
+
+Location: `server/`
+
+### Run locally
+- Install deps: `cd server && npm install`
+- Start dev: `npm run dev` (auto-restarts with nodemon)
+- Start prod: `npm start`
+
+The server listens on `http://localhost:3000` by default, matching `src/config.ts`.
+
+### Endpoints
+- `POST /api/auth/register` → body: `{ name, employeeId, email, password, designation, department }` → `{ user, token }`
+- `POST /api/auth/login` → body: `{ email, password }` → `{ user, token }`
+- `POST /api/attendance/mark` → body: `{ employeeId, timestamp }` → `{ record }`
+- `GET /api/salary/calculate/:employeeId` → `{ summary }` with `grossSalary` and `netSalary`
+
+Notes:
+- Database is MySQL-only via `mysql2`.
+- Salary calculation assumes 8h workday, overtime after 8h, and late if first IN is after 09:15.
+
+### Environment
+
+Create `server/.env` and adjust values as needed:
+
+```
+PORT=3000
+DATABASE_CLIENT=mysql2
+DATABASE_URL=mysql://user:password@localhost:3306/singhal_hospital
+OVERTIME_RATE=200
+LATE_PENALTY=100
+JWT_SECRET=dev-secret
+```
+
+SQLite is not supported.
+
+### Attendance API Notes
+
+- The server enforces per-day sequencing: first mark is `IN` (login), second is `OUT` (logout). Further marks for the same day are rejected.
+- The attendance mark endpoint auto-assigns `type` based on the day’s existing records.
+
+### MySQL Setup
+
+- Install and run MySQL locally or use a managed instance.
+- Create a database, e.g., `singhal_hospital`.
+- Provide credentials via `DATABASE_URL`, for example:
+  - `mysql://user:password@localhost:3306/singhal_hospital`
+- Ensure the user has privileges to create tables (migrations will auto-create `users` and `attendance`).
 
 The Axios client uses request interceptors to include `Authorization` header when `token` is stored.
 
