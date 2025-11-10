@@ -1,0 +1,35 @@
+{
+  "users": [
+    {
+      "name": "John Doe",
+      "employeeId": "EMP001",
+      "email": "john@company.com",
+      "designation": "Nurse",
+      "department": "Emergency",
+      "baseSalary": 40000
+    },
+    {
+      "name": "Jane Smith",
+      "employeeId": "EMP002",
+      "email": "jane@company.com",
+      "designation": "Doctor",
+      "department": "Surgery",
+      "baseSalary": 80000
+    }
+  ],
+  "attendance": [
+    {"employeeId": "EMP001", "timestamp": "2025-11-01T09:00:00Z", "type": "IN"},
+    {"employeeId": "EMP001", "timestamp": "2025-11-01T17:00:00Z", "type": "OUT"},
+    {"employeeId": "EMP001", "timestamp": "2025-11-02T09:10:00Z", "type": "IN"},
+    {"employeeId": "EMP001", "timestamp": "2025-11-02T17:10:00Z", "type": "OUT"},
+    {"employeeId": "EMP002", "timestamp": "2025-11-01T08:45:00Z", "type": "IN"}
+  ],
+  "overtime": {
+    "EMP001": 12,
+    "EMP002": 6
+  },
+  "late": {
+    "EMP001": 3,
+    "EMP002": 1
+  }
+}
